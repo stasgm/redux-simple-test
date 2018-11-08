@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "lib": ["es2017", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@configs": ["configs/*"],
+      "@common/*": ["src/common/*"],
+      "@containers/*": ["src/containers/*"],
+      "@actions/*": ["src/actions/*"],
+      "@reducers/*": ["src/redux/reducers/*"]
+    },
+    "rootDir": ".",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types",
+      "./typings"
+    ],
+  },
+  "exclude": [
+    "build",
+    "dist",
+    "node_modules",
+    "scripts"
+  ]
+}
