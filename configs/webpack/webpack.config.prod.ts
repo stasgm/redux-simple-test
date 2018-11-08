@@ -34,16 +34,17 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
           }
         ]
       },
+      // sass/css
       {
         test: /\.css$/,
         include: STYLES_PATH,
         use: [MiniCssExtractPlugin.loader, cssLoader]
       },
       {
-        test: /\.css$/,
+        test: /\.(scss|css)$/,
         include: getRootRelativePath('src'),
         exclude: STYLES_PATH,
-        use: [MiniCssExtractPlugin.loader, cssModulesLoader]
+        use: [MiniCssExtractPlugin.loader, cssModulesLoader, 'sass-loader', 'postcss-loader']
       }
     ]
   },
