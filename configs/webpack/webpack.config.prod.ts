@@ -49,7 +49,7 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
     ]
   },
   output: {
-    publicPath: '/dist/' // TODO test
+    publicPath: './' // TODO test
   },
   optimization: {
     minimizer: [
