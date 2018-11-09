@@ -36,15 +36,23 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
       },
       // sass/css
       {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader, // creates style nodes from JS strings
+          'css-loader', // translates CSS into CommonJS
+          'sass-loader' // compiles Sass to CSS, using Node Sass by default
+        ]
+      },
+      {
         test: /\.css$/,
         include: STYLES_PATH,
         use: [MiniCssExtractPlugin.loader, cssLoader]
       },
       {
-        test: /\.(scss|css)$/,
+        test: /\.css$/,
         include: getRootRelativePath('src'),
         exclude: STYLES_PATH,
-        use: [MiniCssExtractPlugin.loader, cssModulesLoader, 'sass-loader', 'postcss-loader']
+        use: [MiniCssExtractPlugin.loader, cssModulesLoader]
       }
     ]
   },
@@ -60,26 +68,13 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
       })
       // new OptimizeCSSAssetsPlugin({})
     ]
-    // splitChunks: {
-    //   cacheGroups: {
-    //     vendor: {
-    //       chunks: 'initial',
-    //       name: 'vendor',
-    //       test: 'vendor',
-    //       enforce: true
-    //     }
-    //   }
-    // }
   },
-  // performance: {
-  //   hints: false
-  // },
   plugins: [
     new CleanWebpackPlugin(['dist'], {
       root: getRootRelativePath('')
     }),
     new MiniCssExtractPlugin({ filename: EXTRACT_CSS_FILENAME }),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new EnvironmentPlugin({
       NODE_ENV: process.env.NODE_ENV || 'production'
     })
