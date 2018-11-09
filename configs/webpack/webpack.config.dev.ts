@@ -38,6 +38,14 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
           }
         ]
       },
+      {
+        test: /\.scss$/,
+        use: [
+            "style-loader", // creates style nodes from JS strings
+            "css-loader", // translates CSS into CommonJS
+            "sass-loader" // compiles Sass to CSS, using Node Sass by default
+        ]
+      },
       // styles
       {
         test: /\.css$/,
@@ -46,10 +54,10 @@ const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT
       },
       // sass/css
       {
-        test: /\.(scss|css)$/,
+        test: /\.css$/,
         include: getRootRelativePath('src'),
         exclude: STYLES_PATH,
-        use: ['style-loader', cssModulesLoader, 'sass-loader', 'postcss-loader']
+        use: ['style-loader', cssModulesLoader]
       }
     ]
   },
