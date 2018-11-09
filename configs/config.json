@@ -1,6 +1,0 @@
-{
-  "webpack": {
-    "appMountNodeId": "app",
-    "buildPath": "/dist"
-  }
-}
