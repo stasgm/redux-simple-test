@@ -1,4 +1,4 @@
-import { ADD_ARTICLE } from '../action-types';
+import * as Actions from '../action-types';
 
 export interface IBaseAction<T> {
   type: string;
@@ -20,12 +20,16 @@ export const createDefaultState = (): IRootState => ({
 
 export const rootReducer = (state = createDefaultState(), action: IBaseAction<IArticle>): IRootState => {
   switch (action.type) {
-    case ADD_ARTICLE:
-      const newState: IRootState = {
+    case Actions.ADD_ARTICLE:
+    return {
         ...state,
         articles: [...state.articles || [], action.payload]
       };
-      return newState;
+    case Actions.DELETE_ARTICLES:
+    return {
+        ...state,
+        articles: []
+      };
     default:
       return state;
   }

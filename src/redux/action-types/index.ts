@@ -1,1 +1,2 @@
 export const ADD_ARTICLE = "ADD_ARTICLE";
+export const DELETE_ARTICLES = "DELETE_ARTICLES";

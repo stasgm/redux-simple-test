@@ -14,7 +14,7 @@ const EXTRACT_CSS_FILENAME = 'styles/[name].[chunkhash].css';
 const STYLES_PATH = getRootRelativePath('src/styles');
 
 const config: Configuration = merge(getWebpackConfigBase(OUTPUT_FILENAME, OUTPUT_CHUNK_FILENAME), {
-  devtool: 'source-map',
+  devtool: false,
   mode: 'production',
   module: {
     rules: [
