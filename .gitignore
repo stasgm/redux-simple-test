@@ -4,8 +4,10 @@
 packages/*/dist*
 /.awcache
 
-# server config
+# firebase  config
+/configs/firebase.config.json
 # /configs/config.json
+
 
 # Logs
 logs

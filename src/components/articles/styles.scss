@@ -24,43 +24,70 @@ $breakpoints: (
   }
 }
 
-
-.inputBox input{
-  width: 300px;
-  @include respond-below(xxs) {
-    width: 100%;
+.main-container {
+  max-width: 876px;
+  min-width: 576px;
+  margin: 0 auto;
+  @include respond-below(xs) {
+    min-width: 300px;
+    max-width: 100%;
   }
 }
 
 .content {
-  margin: 10px 10px 10px 10px;
-  // display: inline-block;
-  @include respond-below(xxs) {
-    // border: 35px;
-    margin: 3px 3px 3px 3px;
-    // display: block;
+  min-width: 576px;
+  max-width: 1600px;
+  margin: auto 4px;
+  @include respond-below(xs) {
+    min-width: 300px;
+    margin: 2px;
   }
 }
 
 .table {
-  margin-top: 5px;
-  @include respond-below(xxs) {
-    // border: 35px;
-    margin-top: 3px;
-    size: small;
+  margin-top: 3px;
+}
+
+.input-container.desktop {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-container .input-box {
+  width: 100%;
+  min-width: 150px;
+}
+
+.input-container input {
+  width: 100%;
+  @include respond-below(xs) {
+    width: 100%;
   }
 }
 
-.buttons {
-  margin-top: 5px;
+.button-container {
+  display: flex;
+  justify-content: flex-end;
   button {
-    width: 120px;
+    width: 100px;
+    margin: 0px 2px;
   }
-  @include respond-below(xxs) {
-    border-color: blue;
+  button:first-child {
+    margin-left: 4px;
+  }
+  button:last-child {
+    margin-right: 0px;
+  }
+  @include respond-below(xs) {
     margin-top: 3px;
     button {
       width: 100px;
+    }
+    button:first-child {
+      margin-left: 0px;
+    }
+    button:last-child {
+      margin-right: 0px;
     }
   }
 }

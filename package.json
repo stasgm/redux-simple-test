@@ -83,13 +83,16 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@types/react-responsive": "^3.0.2",
     "antd": "^3.10.4",
     "axios": "^0.18.0",
     "error-overlay-webpack-plugin": "^0.1.5",
+    "firebase": "^5.5.8",
     "memoize-one": "^4.0.3",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-redux": "^5.1.0",
+    "react-responsive": "^6.0.1",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
     "shortid": "^2.2.14",

@@ -1,2 +1,3 @@
 export const ADD_ARTICLE = "ADD_ARTICLE";
 export const DELETE_ARTICLES = "DELETE_ARTICLES";
+export const LOAD_ARTICLES= "LOAD_ARTICLES";
