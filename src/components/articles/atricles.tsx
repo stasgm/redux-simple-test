@@ -6,7 +6,7 @@ import { firestore } from 'firebase';
 import MediaQuery from 'react-responsive';
 import { addArticle, deleteArticles, loadArticles } from '../../redux/actions';
 import { IRootState, IArticle } from '../../redux/reducers';
-import { firebaseDB } from './firestore';
+import { firebaseDB } from '../../firestore/firestore';
 
 import './styles.scss';
 
@@ -96,9 +96,9 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     if (textInput.current) textInput.current.focus();
   };
 
-  private handleEdit =(key: string) => {
+  private handleEdit = (key: string) => {
     console.log('edit', key);
-  }
+  };
 
   private handleGetData = () => {
     this.setState({ data: [] });
@@ -143,7 +143,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   private desktopView = () => (
     <>
       <div className="input-container desktop">
-        <div className="input-box">
+        <div className="input-box-container">
           <Input
             style={{ borderColor: this.state.isInputError ? 'red' : '' }}
             onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
@@ -180,16 +180,21 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   public render() {
     return (
-      <div className="content">
-          <MediaQuery maxWidth={576}>
-          {matches => {
-            if (matches) {
-              return this.mobileView();
-            } else {
-              return this.desktopView();
-            }
-          }}
-        </MediaQuery>
+      <div className="main-container">
+        <div className="input-container">
+          <div className="input-box-container">
+            <Input
+              style={{ borderColor: this.state.isInputError ? 'red' : '' }}
+              onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
+              value={this.state.inputText}
+              placeholder="Enter something good"
+              ref={textInput}
+              autoFocus={true}
+            />
+          </div>
+          <div className="button-container">{this.buttons}</div>
+        </div>
+        <Table className="table nl" columns={this.columns} bordered={true} dataSource={this.props.list} />
       </div>
     );
   }

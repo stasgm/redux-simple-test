@@ -27,20 +27,27 @@ $breakpoints: (
 .main-container {
   max-width: 876px;
   min-width: 576px;
-  margin: 0 auto;
+  margin: auto;
   @include respond-below(xs) {
+    margin: 4px auto;
     min-width: 300px;
     max-width: 100%;
   }
 }
 
-.content {
+.input-container {
+  display: flex;
+  justify-content: space-between;
   min-width: 576px;
   max-width: 1600px;
-  margin: auto 4px;
+  // margin: auto 4px;
+  flex-wrap: nowrap;
   @include respond-below(xs) {
     min-width: 300px;
     margin: 2px;
+  }
+  @include respond-below(xs) {
+    flex-wrap: wrap;
   }
 }
 
@@ -48,21 +55,13 @@ $breakpoints: (
   margin-top: 3px;
 }
 
-.input-container.desktop {
-  display: flex;
-  justify-content: space-between;
-}
-
-.input-container .input-box {
+.input-container .input-box-container {
   width: 100%;
   min-width: 150px;
 }
 
 .input-container input {
   width: 100%;
-  @include respond-below(xs) {
-    width: 100%;
-  }
 }
 
 .button-container {
@@ -80,6 +79,7 @@ $breakpoints: (
   }
   @include respond-below(xs) {
     margin-top: 3px;
+    width: 100%;
     button {
       width: 100px;
     }
