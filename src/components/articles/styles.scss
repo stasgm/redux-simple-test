@@ -1,8 +1,8 @@
 $breakpoints: (
   xxs: 321px,
-  xs: 576px,
+  xs: 586px,
   sm: 768px,
-  md: 992px,
+  md: 884px,
   lg: 1200px
 );
 
@@ -26,12 +26,15 @@ $breakpoints: (
 
 .main-container {
   max-width: 876px;
-  min-width: 576px;
+  min-width: 580px;
   margin: auto;
   @include respond-below(xs) {
-    margin: 4px auto;
+    // margin: auto 0px;
     min-width: 300px;
     max-width: 100%;
+  }
+  @include respond-below(md) {
+    margin: auto 2px ;
   }
 }
 
@@ -44,7 +47,7 @@ $breakpoints: (
   flex-wrap: nowrap;
   @include respond-below(xs) {
     min-width: 300px;
-    margin: 2px;
+    // margin: auto 2px ;
   }
   @include respond-below(xs) {
     flex-wrap: wrap;

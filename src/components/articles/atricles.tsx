@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import shortid from 'shortid';
 import { Button, Table, Input, message, Modal } from 'antd';
 import { firestore } from 'firebase';
-import MediaQuery from 'react-responsive';
 import { addArticle, deleteArticles, loadArticles } from '../../redux/actions';
 import { IRootState, IArticle } from '../../redux/reducers';
 import { firebaseDB } from '../../firestore/firestore';
@@ -140,47 +139,9 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     </>
   );
 
-  private desktopView = () => (
-    <>
-      <div className="input-container desktop">
-        <div className="input-box-container">
-          <Input
-            style={{ borderColor: this.state.isInputError ? 'red' : '' }}
-            onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
-            value={this.state.inputText}
-            placeholder="Enter something good"
-            ref={textInput}
-            autoFocus={true}
-          />
-        </div>
-        <div className="button-container">{this.buttons}</div>
-      </div>
-      <Table className="table nl" columns={this.columns} bordered={true} dataSource={this.props.list} />
-    </>
-  );
-
-  private mobileView = () => (
-    <>
-      <div className="input-container mobile">
-        <div className="input-box">
-          <Input
-            style={{ borderColor: this.state.isInputError ? 'red' : '' }}
-            onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
-            value={this.state.inputText}
-            placeholder="Enter something"
-            ref={textInput}
-            autoFocus={true}
-          />
-        </div>
-        <div className="button-container">{this.buttons}</div>
-      </div>
-      <Table className="table xs" columns={this.columns} size="small" bordered={true} dataSource={this.props.list} />
-    </>
-  );
-
   public render() {
     return (
-      <div className="main-container">
+      <div className="content-container">
         <div className="input-container">
           <div className="input-box-container">
             <Input
@@ -194,7 +155,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
           </div>
           <div className="button-container">{this.buttons}</div>
         </div>
-        <Table className="table nl" columns={this.columns} bordered={true} dataSource={this.props.list} />
+        <Table className="table nl" columns={this.columns} size="small" bordered={true} dataSource={this.props.list} />
       </div>
     );
   }
