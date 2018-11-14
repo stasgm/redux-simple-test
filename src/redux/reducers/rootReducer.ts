@@ -9,21 +9,23 @@ export interface IBaseAction<T> {
 
 export interface IRootState {
   articles: IArticle[];
+  visibiltyFilter: [];
 }
 
-export const createDefaultState = (): IRootState => ({
-  articles: []
-});
+/* export const createDefaultState = (): IRootState => ({
+  articles: [],
+  visibiltyFilter: []
+}); */
 
 export const visibiltyReducer = (
-  state = createDefaultState(),
+  state = [],
   action: IBaseAction<IArticle>
 ): IRootState => {
   return state;
 };
 
 export const articlesReducer = (
-  state = createDefaultState(),
+  state = [],
   action: IBaseAction<IArticle>
 ): IRootState => {
   return state
