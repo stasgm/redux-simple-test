@@ -1,13 +1,10 @@
-import * as Actions from '../action-types';
+import { combineReducers } from 'redux';
+import { IArticle } from '@src/models';
+import * as Actions from '../actions';
 
 export interface IBaseAction<T> {
   type: string;
   payload: T;
-}
-
-export interface IArticle {
-  key: string;
-  name: string;
 }
 
 export interface IRootState {
@@ -18,19 +15,37 @@ export const createDefaultState = (): IRootState => ({
   articles: []
 });
 
-export const rootReducer = (state = createDefaultState(), action: IBaseAction<IArticle>): IRootState => {
-  switch (action.type) {
+export const visibiltyReducer = (
+  state = createDefaultState(),
+  action: IBaseAction<IArticle>
+): IRootState => {
+  return state;
+};
+
+export const articlesReducer = (
+  state = createDefaultState(),
+  action: IBaseAction<IArticle>
+): IRootState => {
+  return state
+/*   switch (action.type) {
     case Actions.ADD_ARTICLE:
-    return {
+      return {
         ...state,
-        articles: [...state.articles || [], action.payload]
+        articles: [...(state.articles || []), action.payload]
+      };
+    case Actions.DELETE_ARTICLE:
+      return {
+        ...state,
+        articles: state.articles.filter(itm => itm.name !== action.payload.key)
       };
     case Actions.DELETE_ARTICLES:
-    return {
+      return {
         ...state,
         articles: []
       };
     default:
       return state;
-  }
+  } */
 };
+
+export const rootReducer = combineReducers<IRootState>({ articles: articlesReducer, visibiltyFilter: visibiltyReducer });

@@ -34,7 +34,7 @@ $breakpoints: (
     max-width: 100%;
   }
   @include respond-below(md) {
-    margin: auto 2px ;
+    margin: auto 4px ;
   }
 }
 
@@ -43,11 +43,9 @@ $breakpoints: (
   justify-content: space-between;
   min-width: 576px;
   max-width: 1600px;
-  // margin: auto 4px;
   flex-wrap: nowrap;
   @include respond-below(xs) {
     min-width: 300px;
-    // margin: auto 2px ;
   }
   @include respond-below(xs) {
     flex-wrap: wrap;
@@ -72,7 +70,7 @@ $breakpoints: (
   justify-content: flex-end;
   button {
     width: 100px;
-    margin: 0px 2px;
+    margin: 0px 4px;
   }
   button:first-child {
     margin-left: 4px;
