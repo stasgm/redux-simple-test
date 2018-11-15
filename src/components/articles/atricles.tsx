@@ -3,18 +3,14 @@ import { connect } from 'react-redux';
 import shortid from 'shortid';
 import { Button, Table, Input, message, Modal } from 'antd';
 import { firestore } from 'firebase';
-import { addArticle, deleteArticles, loadArticles } from '../../redux/actions';
-import { IRootState } from '../../redux/reducers';
-import { IArticle } from '@src/models';
-import { firebaseDB } from '../../firestore/firestore';
+
+import { articlesActions } from '@src/redux/actions/articlesActions';
+import { IRootState } from '@src/redux/reducers';
+import { IArticle, IArticles } from '@src/models';
+import { firebaseDB } from '@src/firestore/firestore';
 import { ModalEdit } from './ModalEdit';
 
 import './styles.scss';
-
-interface IData {
-  key: string;
-  name: string;
-}
 
 interface IModal {
   visible: boolean;
@@ -24,15 +20,13 @@ interface IModal {
 
 interface IProps {
   onAdd: (article: IArticle) => void;
-  onDeleteAll: () => void;
-  onLoad: (articles: IArticle[]) => void;
-  list: IArticle[];
+  articles: IArticle[];
 }
 
 interface IState {
   inputText: string;
   isInputError: boolean;
-  data: IData[];
+  // data: IData[];
   modal: IModal;
 }
 
@@ -42,7 +36,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   public state: Readonly<IState> = {
     inputText: '',
     isInputError: false,
-    data: [],
+    // data: [],
     modal: {
       visible: false,
       modalText: '',
@@ -61,7 +55,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
       title: 'Наименование',
       dataIndex: 'name',
       key: 'name',
-      render: (text: any, record: IData) => (
+      render: (text: any, record: IArticle) => (
         <div style={{ display: 'flex' }}>
           <div className="record-text" style={{ width: '100%', alignSelf: 'center' }}>
             {record.name}
@@ -104,7 +98,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleDeleteAll = () => {
-    this.props.onDeleteAll();
+    // this.props.onDeleteAll();
     this.setState({ isInputError: false });
     if (textInput.current) textInput.current.focus();
   };
@@ -122,16 +116,16 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     this.setState({...this.state, modal: {...this.state.modal, recordValue: value}})
   }
 
-  private handleEdit = (value: IData) => {
+  private handleEdit = (value: IArticle) => {
     this.setState({ modal: { visible: true, recordValue: value.name, modalText: 'Edit record' } });
     console.log('edit', value.key);
   };
 
   private handleGetData = () => {
-    this.setState({ data: [] });
-    this.props.onDeleteAll();
+    // this.setState({ IArticle: [] });
+    // this.props.onDeleteAll();
 
-    const db = firebaseDB.firestore();
+/*     const db = firebaseDB.firestore();
     db.settings({ timestampsInSnapshots: true });
     db.collection('list').onSnapshot((snapshot: firestore.QuerySnapshot) => {
       snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => {
@@ -142,7 +136,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
         this.props.onAdd({ key, name });
       });
     });
-
+ */
     // this.props.onLoad(this.state.data);
   };
 
@@ -150,7 +144,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     const db = firebaseDB.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    this.props.list.forEach((i: IArticle) => {
+    this.props.articles.forEach((i: IArticle) => {
       db.collection('list').add({
         key: i.key,
         name: i.name
@@ -179,7 +173,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             <Button onClick={this.handleSaveData}>Save</Button>
           </div>
         </div>
-        <Table className="table nl" columns={this.columns} size="small" bordered={true} dataSource={this.props.list} />
+        <Table className="table nl" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
         <ModalEdit
           {...this.state.modal}
           onOk={this.handleModalOk}
@@ -193,14 +187,12 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-  list: state.articles
+  articles: state.articles.articles
 });
 
 export const Articles = connect(
   mapStateToProps,
   {
-    onAdd: (article: IArticle) => addArticle(article),
-    onLoad: (articles: IArticle[]) => loadArticles(articles),
-    onDeleteAll: () => deleteArticles()
+    onAdd: (article: IArticle) => articlesActions.addArticle(article)
   }
 )(ArticlesConnected);
