@@ -7,5 +7,12 @@ import { rootReducer, IRootState } from '../reducers/';
 const middleware = [thunk, logger];
 
 export const configureStore = (initialState: Partial<IRootState> = {}) => {
-  return createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));
+  const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));
+  // webpack HMR for reducers
+  if ((<any>module).hot) {
+    (<any>module).hot.accept('../reducers', () => {
+      store.replaceReducer(rootReducer);
+    });
+  }
+  return store;
 }

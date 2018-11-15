@@ -113,6 +113,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleEditModal = (value: string) => {
+    console.log('edit modal');
     this.setState({...this.state, modal: {...this.state.modal, recordValue: value}})
   }
 
@@ -173,7 +174,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             <Button onClick={this.handleSaveData}>Save</Button>
           </div>
         </div>
-        <Table className="table nl" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
+        <Table className="table" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
         <ModalEdit
           {...this.state.modal}
           onOk={this.handleModalOk}
