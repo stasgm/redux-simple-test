@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 import { Button, Table, Input, message, Modal } from 'antd';
-import { firestore } from 'firebase';
+// import { firestore } from 'firebase';
 
 import { articlesActions } from '@src/redux/actions/articlesActions';
 import { IRootState } from '@src/redux/reducers';
@@ -20,6 +20,8 @@ interface IModal {
 
 interface IProps {
   onAdd: (article: IArticle) => void;
+  onDelete: (article: IArticle) => void;
+  onDeleteAll: () => void;
   articles: IArticle[];
 }
 
@@ -66,7 +68,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
           >
             <Button.Group>
               <Button icon="edit" onClick={() => this.handleEdit(record)} />
-              <Button icon="delete" onClick={() => this.handleClickDelete(record.key)} />
+              <Button icon="delete" onClick={() => this.handleClickDelete(this.props.onDelete, record)} />
             </Button.Group>
           </div>
         </div>
@@ -87,18 +89,18 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     }
   };
 
-  private handleClickDelete = (key: string) => {
+  private handleClickDelete = (deleteArticle: (record: IArticle) => void, record: IArticle) => {
     Modal.confirm({
       title: 'Confirmation',
-      content: 'Do you want to delete these items?',
+      content: `Удалить '${record.name}''?`,
       onOk() {
-        console.log(`deleted ${key}`);
+        deleteArticle(record);
       }
     });
   };
 
   private handleDeleteAll = () => {
-    // this.props.onDeleteAll();
+    this.props.onDeleteAll();
     this.setState({ isInputError: false });
     if (textInput.current) textInput.current.focus();
   };
@@ -109,24 +111,21 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleModalCancel = () => {
-    this.setState({...this.state, modal: {...this.state.modal, visible: false } });
+    this.setState({ ...this.state, modal: { ...this.state.modal, visible: false } });
   };
 
-  private handleEditModal = (value: string) => {
-    console.log('edit modal');
-    this.setState({...this.state, modal: {...this.state.modal, recordValue: value}})
-  }
+  private handleEditModal = (record: string) => {
+    this.setState({ ...this.state, modal: { ...this.state.modal, recordValue: record } });
+  };
 
-  private handleEdit = (value: IArticle) => {
-    this.setState({ modal: { visible: true, recordValue: value.name, modalText: 'Edit record' } });
-    console.log('edit', value.key);
+  private handleEdit = (record: IArticle) => {
+    this.setState({ modal: { visible: true, recordValue: record.name, modalText: 'Редактирование записи' } });
   };
 
   private handleGetData = () => {
     // this.setState({ IArticle: [] });
     // this.props.onDeleteAll();
-
-/*     const db = firebaseDB.firestore();
+    /*     const db = firebaseDB.firestore();
     db.settings({ timestampsInSnapshots: true });
     db.collection('list').onSnapshot((snapshot: firestore.QuerySnapshot) => {
       snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => {
@@ -165,6 +164,11 @@ class ArticlesConnected extends React.Component<IProps, IState> {
               placeholder="Enter something good"
               ref={textInput}
               autoFocus={true}
+              onKeyUp={event => {
+                if (event.key === 'Enter') {
+                  this.handleAdd();
+                }
+              }}
             />
           </div>
           <div className="button-container">
@@ -175,12 +179,8 @@ class ArticlesConnected extends React.Component<IProps, IState> {
           </div>
         </div>
         <Table className="table" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
-        <ModalEdit
-          {...this.state.modal}
-          onOk={this.handleModalOk}
-          onCancel={this.handleModalCancel}
-        >
-          <Input value={this.state.modal.recordValue} onChange={e =>this.handleEditModal(e.currentTarget.value)}/>
+        <ModalEdit {...this.state.modal} onOk={this.handleModalOk} onCancel={this.handleModalCancel}>
+          <Input value={this.state.modal.recordValue} onChange={e => this.handleEditModal(e.currentTarget.value)} />
         </ModalEdit>
       </div>
     );
@@ -188,12 +188,14 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-  articles: state.articles.articles
+  articles: state.articles.list
 });
 
 export const Articles = connect(
   mapStateToProps,
   {
-    onAdd: (article: IArticle) => articlesActions.addArticle(article)
+    onAdd: (article: IArticle) => articlesActions.addArticle(article),
+    onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
+    onDeleteAll: () => articlesActions.deleteArticles()
   }
 )(ArticlesConnected);

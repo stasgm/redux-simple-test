@@ -4,6 +4,7 @@ export interface IArticle {
 }
 
 export interface IArticles {
-  articles: IArticle[];
+  list: IArticle[];
+  filter: string;
 }
 
