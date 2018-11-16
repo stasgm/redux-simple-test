@@ -14,12 +14,13 @@ import './styles.scss';
 
 interface IModal {
   visible: boolean;
-  recordValue: string;
+  recordValue: IArticle | null;
   modalText: string;
 }
 
 interface IProps {
   onAdd: (article: IArticle) => void;
+  onEdit: (article: IArticle) => void;
   onDelete: (article: IArticle) => void;
   onDeleteAll: () => void;
   articles: IArticle[];
@@ -42,7 +43,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     modal: {
       visible: false,
       modalText: '',
-      recordValue: ''
+      recordValue: null
     }
   };
 
@@ -91,35 +92,47 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   private handleClickDelete = (deleteArticle: (record: IArticle) => void, record: IArticle) => {
     Modal.confirm({
-      title: 'Confirmation',
-      content: `Удалить '${record.name}''?`,
+      title: 'Подтверждение',
+      content: `Удалить запись '${record.name}''?`,
       onOk() {
         deleteArticle(record);
       }
     });
   };
 
+  private handleClickDeleteAll = (deleteArticles: () => void) => {
+    Modal.confirm({
+      title: 'Подтверждение',
+      content: 'Удалить все записи?',
+      onOk() {
+        deleteArticles();
+      }
+    });
+  };
+
   private handleDeleteAll = () => {
-    this.props.onDeleteAll();
+    this.handleClickDeleteAll(this.props.onDeleteAll);
     this.setState({ isInputError: false });
     if (textInput.current) textInput.current.focus();
   };
 
-  private handleModalOk = () => {
-    console.log('cancel');
-    this.handleModalCancel();
+  private handleEditModalOk = () => {
+    if (this.state.modal.recordValue) {
+      this.props.onEdit(this.state.modal.recordValue)
+    }
+    this.handleEditModalCancel();
   };
 
-  private handleModalCancel = () => {
+  private handleEditModalCancel = () => {
     this.setState({ ...this.state, modal: { ...this.state.modal, visible: false } });
   };
 
-  private handleEditModal = (record: string) => {
+  private handleEditModal = (record: IArticle) => {
     this.setState({ ...this.state, modal: { ...this.state.modal, recordValue: record } });
   };
 
   private handleEdit = (record: IArticle) => {
-    this.setState({ modal: { visible: true, recordValue: record.name, modalText: 'Редактирование записи' } });
+    this.setState({ modal: { visible: true, recordValue: record, modalText: 'Редактирование записи' } });
   };
 
   private handleGetData = () => {
@@ -179,8 +192,11 @@ class ArticlesConnected extends React.Component<IProps, IState> {
           </div>
         </div>
         <Table className="table" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
-        <ModalEdit {...this.state.modal} onOk={this.handleModalOk} onCancel={this.handleModalCancel}>
-          <Input value={this.state.modal.recordValue} onChange={e => this.handleEditModal(e.currentTarget.value)} />
+        <ModalEdit {...this.state.modal} onOk={() => this.handleEditModalOk()} onCancel={this.handleEditModalCancel}>
+          <Input
+            value={this.state.modal.recordValue ? this.state.modal.recordValue.name : '' }
+            onChange={e => this.handleEditModal({ name: e.currentTarget.value,  key: this.state.modal.recordValue ? this.state.modal.recordValue.key : ''})}
+          />
         </ModalEdit>
       </div>
     );
@@ -195,6 +211,7 @@ export const Articles = connect(
   mapStateToProps,
   {
     onAdd: (article: IArticle) => articlesActions.addArticle(article),
+    onEdit: (article: IArticle) => articlesActions.editArticle(article),
     onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
     onDeleteAll: () => articlesActions.deleteArticles()
   }

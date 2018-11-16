@@ -16,6 +16,12 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
         list: [action.payload, ...state.list]
       };
     }
+    case getType(articlesActions.editArticle): {
+      return {
+        ...state,
+        list: state.list.map(itm => (itm.key === action.payload.key ? action.payload : itm))
+      };
+    }
     case getType(articlesActions.deleteArticle): {
       return {
         ...state,

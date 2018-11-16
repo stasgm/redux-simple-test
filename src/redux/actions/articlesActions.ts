@@ -5,6 +5,9 @@ export const articlesActions = {
   addArticle:  createAction('ADD_ARTICLE', resolve => {
     return (article: IArticle) => resolve(article);
   }),
+  editArticle:  createAction('EDIT_ARTICLE', resolve => {
+    return (article: IArticle) => resolve(article);
+  }),
   deleteArticle:  createAction('DELETE_ARTICLE', resolve => {
     return (article: IArticle) => resolve(article);
   }),
