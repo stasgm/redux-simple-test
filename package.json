@@ -1,7 +1,7 @@
 {
-  "name": "lib1-stas-2018",
-  "version": "1.0.0",
-  "description": "",
+  "name": "react-redux-typescript",
+  "version": "0.0.5",
+  "description": "Simple react-redux-typescript CRUD example",
   "scripts": {
     "start": "cross-env TS_NODE_PROJECT=configs/tsconfig.webpack.json webpack-dev-server --config configs/webpack/webpack.config.dev.ts",
     "build": "cross-env TS_NODE_PROJECT=configs/tsconfig.webpack.json webpack --progress --display-modules --config configs/webpack/webpack.config.prod.ts",

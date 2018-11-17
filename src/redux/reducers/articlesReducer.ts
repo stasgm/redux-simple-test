@@ -44,6 +44,7 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
     case getType(articlesActions.loadArticles.failure): {
       return {
         ...state,
+        list: [],
         isLoading: false,
         hasErrored: true
       };
@@ -52,6 +53,25 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
       return {
         ...state,
         list: action.payload,
+        isLoading: false,
+      };
+    }
+    case getType(articlesActions.saveArticles.request): {
+      return {
+        ...state,
+        isLoading: true
+      };
+    }
+    case getType(articlesActions.saveArticles.failure): {
+      return {
+        ...state,
+        isLoading: false,
+        hasErrored: true
+      };
+    }
+    case getType(articlesActions.saveArticles.success): {
+      return {
+        ...state,
         isLoading: false,
       };
     }

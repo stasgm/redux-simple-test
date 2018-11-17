@@ -21,7 +21,7 @@ export const articlesActions = {
   >(),
   saveArticles: createAsyncAction('REQUEST_SAVE_ARTICLES', 'REQUEST_SAVE_SUCCEEDED', 'REQUEST_SAVE_FAILED')<
     void,
-    IArticle[],
+    void,
     Error
   >()
 };

@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
-import { Button, Table, Input, message, Modal, Spin, Alert } from 'antd';
-// import { firestore } from 'firebase';
+import { Button, Table, Input, Modal, message } from 'antd';
 
 import { articlesActions } from '@src/redux/actions/articlesActions';
 import { IRootState, IArticle } from '@src/models';
-import { firebaseDB } from '@src/firestore/firestore';
 import { ModalEdit } from './ModalEdit';
+import { firestoreApi } from './api';
 
 import './styles.scss';
 
@@ -23,6 +22,7 @@ interface IProps {
   onDelete: (article: IArticle) => void;
   onDeleteAll: () => void;
   onLoad: () => void;
+  onSave: (article: IArticle[]) => void;
   articles: IArticle[];
   isLoading: boolean;
   hasErrored: boolean;
@@ -116,7 +116,9 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   private handleDeleteAll = () => {
     this.handleClickDeleteAll(this.props.onDeleteAll);
+
     this.setState({ isInputError: false });
+
     if (textInput.current) textInput.current.focus();
   };
 
@@ -141,33 +143,10 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   private handleGetData = () => {
     this.props.onLoad();
-    // this.setState({ IArticle: [] });
-    // this.props.onDeleteAll();
-    /*     const db = firebaseDB.firestore();
-    db.settings({ timestampsInSnapshots: true });
-    db.collection('list').onSnapshot((snapshot: firestore.QuerySnapshot) => {
-      snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => {
-        const { key, name } = docSnapshot.data();
-
-        this.setState({ ...this.state, data: [...this.state.data, { key, name }] });
-
-        this.props.onAdd({ key, name });
-      });
-    });
- */
-    // this.props.onLoad(this.state.data);
   };
 
   private handleSaveData = () => {
-    const db = firebaseDB.firestore();
-    db.settings({ timestampsInSnapshots: true });
-
-    this.props.articles.forEach((i: IArticle) => {
-      db.collection('list').add({
-        key: i.key,
-        name: i.name
-      });
-    });
+    this.props.onSave(this.props.articles);
   };
 
   public render() {
@@ -223,27 +202,44 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 const mapStateToProps = (state: IRootState) => ({
   articles: state.articles.list,
   isLoading: state.articles.isLoading,
-  hasErrored: state.articles.hasErrored,
+  hasErrored: state.articles.hasErrored
 });
 
 export const Articles = connect(
   mapStateToProps,
   {
-      onAdd: (article: IArticle) => articlesActions.addArticle(article),
-      onEdit: (article: IArticle) => articlesActions.editArticle(article),
-      onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
-      onDeleteAll: () => articlesActions.deleteArticles(),
-      onLoad: () => fetchData()
+    onAdd: (article: IArticle) => articlesActions.addArticle(article),
+    onEdit: (article: IArticle) => articlesActions.editArticle(article),
+    onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
+    onDeleteAll: () => articlesActions.deleteArticles(),
+    onLoad: () => fetchData(),
+    onSave: (articles: IArticle[]) => saveData(articles)
   }
 )(ArticlesConnected);
 
 const fetchData = () => {
-  return (dispatch: any) => {
+  return async (dispatch: any) => {
     dispatch(articlesActions.loadArticles.request());
-    return setTimeout(()=> {
-      dispatch(message.error('Ошибка загрузки'));
-      dispatch(articlesActions.loadArticles.failure(Error('Ошибка загрузки')));
-      // dispatch(articlesActions.loadArticles.success([{key: 'zero', name: 'test'}]));
-    }, 1000)
-  }
-}
+    try {
+      const res = await firestoreApi.load();
+      dispatch(articlesActions.loadArticles.success(res));
+    } catch (err) {
+      dispatch(articlesActions.loadArticles.failure(err));
+      dispatch(message.error('Ошибка загрузки данных'));
+    }
+  };
+};
+
+const saveData = (list: IArticle[]) => {
+  return async (dispatch: any) => {
+    dispatch(articlesActions.saveArticles.request());
+    try {
+      await firestoreApi.deleteAll();
+      await firestoreApi.save(list);
+      dispatch(articlesActions.saveArticles.success());
+    } catch (err) {
+      dispatch(articlesActions.saveArticles.failure(err));
+      dispatch(message.error('Ошибка сохранения данных'));
+    }
+  };
+};
