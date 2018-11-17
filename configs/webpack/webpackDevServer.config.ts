@@ -1,4 +1,3 @@
-import path from 'path';
 import { getRootRelativePath } from './utils';
 
 const sourcePath = getRootRelativePath('src');

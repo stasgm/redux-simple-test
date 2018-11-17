@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
-import { Button, Table, Input, message, Modal } from 'antd';
+import { Button, Table, Input, message, Modal, Spin, Alert } from 'antd';
 // import { firestore } from 'firebase';
 
 import { articlesActions } from '@src/redux/actions/articlesActions';
-import { IRootState } from '@src/redux/reducers';
-import { IArticle, IArticles } from '@src/models';
+import { IRootState, IArticle } from '@src/models';
 import { firebaseDB } from '@src/firestore/firestore';
 import { ModalEdit } from './ModalEdit';
 
@@ -23,23 +22,28 @@ interface IProps {
   onEdit: (article: IArticle) => void;
   onDelete: (article: IArticle) => void;
   onDeleteAll: () => void;
+  onLoad: () => void;
   articles: IArticle[];
+  isLoading: boolean;
+  hasErrored: boolean;
 }
 
 interface IState {
   inputText: string;
   isInputError: boolean;
-  // data: IData[];
   modal: IModal;
 }
 
 const textInput = React.createRef<Input>();
 
+/* const error = () => {
+  message.error('Ошибка загрузки');
+}; */
+
 class ArticlesConnected extends React.Component<IProps, IState> {
   public state: Readonly<IState> = {
     inputText: '',
     isInputError: false,
-    // data: [],
     modal: {
       visible: false,
       modalText: '',
@@ -118,7 +122,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   private handleEditModalOk = () => {
     if (this.state.modal.recordValue) {
-      this.props.onEdit(this.state.modal.recordValue)
+      this.props.onEdit(this.state.modal.recordValue);
     }
     this.handleEditModalCancel();
   };
@@ -136,6 +140,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleGetData = () => {
+    this.props.onLoad();
     // this.setState({ IArticle: [] });
     // this.props.onDeleteAll();
     /*     const db = firebaseDB.firestore();
@@ -191,11 +196,23 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             <Button onClick={this.handleSaveData}>Save</Button>
           </div>
         </div>
-        <Table className="table" columns={this.columns} size="small" bordered={true} dataSource={this.props.articles} />
+        <Table
+          className="table"
+          columns={this.columns}
+          size="small"
+          bordered={true}
+          dataSource={this.props.articles}
+          loading={this.props.isLoading}
+        />
         <ModalEdit {...this.state.modal} onOk={() => this.handleEditModalOk()} onCancel={this.handleEditModalCancel}>
           <Input
-            value={this.state.modal.recordValue ? this.state.modal.recordValue.name : '' }
-            onChange={e => this.handleEditModal({ name: e.currentTarget.value,  key: this.state.modal.recordValue ? this.state.modal.recordValue.key : ''})}
+            value={this.state.modal.recordValue ? this.state.modal.recordValue.name : ''}
+            onChange={e =>
+              this.handleEditModal({
+                name: e.currentTarget.value,
+                key: this.state.modal.recordValue ? this.state.modal.recordValue.key : ''
+              })
+            }
           />
         </ModalEdit>
       </div>
@@ -204,15 +221,29 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-  articles: state.articles.list
+  articles: state.articles.list,
+  isLoading: state.articles.isLoading,
+  hasErrored: state.articles.hasErrored,
 });
 
 export const Articles = connect(
   mapStateToProps,
   {
-    onAdd: (article: IArticle) => articlesActions.addArticle(article),
-    onEdit: (article: IArticle) => articlesActions.editArticle(article),
-    onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
-    onDeleteAll: () => articlesActions.deleteArticles()
+      onAdd: (article: IArticle) => articlesActions.addArticle(article),
+      onEdit: (article: IArticle) => articlesActions.editArticle(article),
+      onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
+      onDeleteAll: () => articlesActions.deleteArticles(),
+      onLoad: () => fetchData()
   }
 )(ArticlesConnected);
+
+const fetchData = () => {
+  return (dispatch: any) => {
+    dispatch(articlesActions.loadArticles.request());
+    return setTimeout(()=> {
+      dispatch(message.error('Ошибка загрузки'));
+      dispatch(articlesActions.loadArticles.failure(Error('Ошибка загрузки')));
+      // dispatch(articlesActions.loadArticles.success([{key: 'zero', name: 'test'}]));
+    }, 1000)
+  }
+}

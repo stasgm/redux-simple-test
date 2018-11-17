@@ -1,15 +1,15 @@
 import { Configuration, NoEmitOnErrorsPlugin, RuleSetLoader } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-
 import config from '../config.json';
 import pkg from '../../package.json';
 import { getRootRelativePath } from './utils';
+import { aliasPath } from './webpack.config.ide';
 
 function getWebpackConfigBase(outputFilename: string, outputChunkFilename: string): Configuration {
   return {
     entry: {
       app: [
-        // TODO 'react-hot-loader/patch',
+        'react-hot-loader/patch', // activate HMR for React
         getRootRelativePath('src/index.tsx')
       ]
     },
@@ -25,7 +25,7 @@ function getWebpackConfigBase(outputFilename: string, outputChunkFilename: strin
         inject: false,
         minify: { collapseWhitespace: true, removeComments: true },
         template: getRootRelativePath('src/index.ejs'),
-        title: 'WEB SCRAPE',
+        title: pkg.name,
         // template params
         appMountNodeId: config.webpack.appMountNodeId,
         description: pkg.description,
@@ -34,7 +34,8 @@ function getWebpackConfigBase(outputFilename: string, outputChunkFilename: strin
       new NoEmitOnErrorsPlugin()
     ],
     resolve: {
-      alias: {
+      alias: aliasPath,
+/*       alias: {
         app: getRootRelativePath('src/'),
         '@common': getRootRelativePath('src/common'),
         '@components': getRootRelativePath('src/components'),
@@ -44,7 +45,7 @@ function getWebpackConfigBase(outputFilename: string, outputChunkFilename: strin
         '@src': getRootRelativePath('src'),
         '@configs': getRootRelativePath('configs'),
         configFile: getRootRelativePath('configs/config.json')
-      },
+      }, */
       extensions: ['.tsx', '.ts', '.js', '.jsx', '.json']
     }
   };

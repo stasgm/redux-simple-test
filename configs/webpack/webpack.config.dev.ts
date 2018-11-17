@@ -2,6 +2,8 @@ import { Configuration, EnvironmentPlugin, HotModuleReplacementPlugin, NamedModu
 import merge from 'webpack-merge';
 import { CheckerPlugin } from 'awesome-typescript-loader';
 import { devServer } from './webpackDevServer.config';
+
+import './webpack.config.ide';
 // import ErrorOverlayPlugin from 'error-overlay-webpack-plugin';
 
 import { getRootRelativePath } from './utils';

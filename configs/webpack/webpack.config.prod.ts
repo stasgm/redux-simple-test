@@ -3,7 +3,7 @@ import merge from 'webpack-merge';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { getWebpackConfigBase, cssLoader, cssModulesLoader } from './webpackConfigBase';
 import { getRootRelativePath } from './utils';

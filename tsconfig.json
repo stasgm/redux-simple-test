@@ -18,10 +18,8 @@
       "@src/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@configs": ["configs/*"],
-      "@common/*": ["src/common/*"],
-      "@containers/*": ["src/containers/*"],
-      "@actions/*": ["src/actions/*"],
-      "@reducers/*": ["src/redux/reducers/*"]
+      "@model/*": ["src/model/*"],
+      "@redux/*": ["src/redux/*"]
     },
     "rootDir": ".",
     "sourceMap": true,

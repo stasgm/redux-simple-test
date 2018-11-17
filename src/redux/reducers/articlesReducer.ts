@@ -1,11 +1,12 @@
 import { getType } from 'typesafe-actions';
-import { TActions } from '../actions/TActions';
-import { articlesActions } from '../actions/articlesActions';
-import { IArticles, IArticle } from '../../models/';
+import { TActions, articlesActions } from '@src/redux/actions/';
+import { IArticles, IArticle } from '@src/models/';
 
 const initialState: IArticles = {
   list: [],
-  filter: ''
+  filter: '',
+  isLoading: false,
+  hasErrored: false,
 };
 
 export const articlesReducer = (state: IArticles = initialState, action: TActions): IArticles => {
@@ -32,6 +33,26 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
       return {
         ...state,
         list: []
+      };
+    }
+    case getType(articlesActions.loadArticles.request): {
+      return {
+        ...state,
+        isLoading: true
+      };
+    }
+    case getType(articlesActions.loadArticles.failure): {
+      return {
+        ...state,
+        isLoading: false,
+        hasErrored: true
+      };
+    }
+    case getType(articlesActions.loadArticles.success): {
+      return {
+        ...state,
+        list: action.payload,
+        isLoading: false,
       };
     }
     default:
