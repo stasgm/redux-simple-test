@@ -29,12 +29,11 @@ $breakpoints: (
   min-width: 580px;
   margin: auto;
   @include respond-below(xs) {
-    // margin: auto 0px;
     min-width: 300px;
     max-width: 100%;
   }
   @include respond-below(md) {
-    margin: auto 4px ;
+    margin: auto 4px;
   }
 }
 
@@ -68,9 +67,12 @@ $breakpoints: (
 .button-container {
   display: flex;
   justify-content: flex-end;
-  button {
+  .button-control {
     width: 100px;
     margin: 0px 4px 0px 0px;
+  }
+  .button-user {
+    width: 40px;
   }
   button:first-child {
     margin-left: 4px;

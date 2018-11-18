@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import shortid from 'shortid';
 import { Button, Table, Input, Modal, message } from 'antd';
 
@@ -169,10 +170,11 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             />
           </div>
           <div className="button-container">
-            <Button onClick={this.handleAdd}>Add</Button>
-            <Button onClick={this.handleDeleteAll}>Delete all</Button>
-            <Button onClick={this.handleGetData}>Load</Button>
-            <Button onClick={this.handleSaveData}>Save</Button>
+            <Button onClick={this.handleAdd} className='button-control'>Добавить</Button>
+            <Button onClick={this.handleDeleteAll} className='button-control'>Удалить всё</Button>
+            <Button onClick={this.handleGetData} className='button-control'>Load</Button>
+            <Button onClick={this.handleSaveData} className='button-control'>Save</Button>
+            <Button onClick={this.handleSaveData} icon="user" className="button-user" />
           </div>
         </div>
         <Table
@@ -218,20 +220,20 @@ export const Articles = connect(
 )(ArticlesConnected);
 
 const fetchData = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: Dispatch) => {
     dispatch(articlesActions.loadArticles.request());
     try {
       const res = await firestoreApi.load();
       dispatch(articlesActions.loadArticles.success(res));
     } catch (err) {
       dispatch(articlesActions.loadArticles.failure(err));
-      dispatch(message.error('Ошибка загрузки данных'));
+      // dispatch(message.error('Ошибка загрузки данных'));
     }
   };
 };
 
 const saveData = (list: IArticle[]) => {
-  return async (dispatch: any) => {
+  return async (dispatch: Dispatch) => {
     dispatch(articlesActions.saveArticles.request());
     try {
       await firestoreApi.deleteAll();
@@ -239,7 +241,7 @@ const saveData = (list: IArticle[]) => {
       dispatch(articlesActions.saveArticles.success());
     } catch (err) {
       dispatch(articlesActions.saveArticles.failure(err));
-      dispatch(message.error('Ошибка сохранения данных'));
+      // dispatch(message.error('Ошибка сохранения данных'));
     }
   };
 };

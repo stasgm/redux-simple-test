@@ -7,23 +7,36 @@ import { firebaseDB } from '@src/firestore';
 import { IArticle } from '@src/models';
 
 const mapToObject = (res: any) => res;
+const collectionName = 'list';
 
 export const firestoreApi = {
-  load: (): Promise<IArticle[]> => {
+  load: (): Promise<any> => {
     return mapToObject(
       firebaseDB
-        .collection('list')
+        .collection(collectionName)
         .get()
         .then((snapshot: firestore.QuerySnapshot) =>
           snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data())
         )
     );
   },
-  deleteAll: (): Promise<any> => {
-    return deleteCollection(firebaseDB, 'list');
+  save: (list: IArticle[]): Promise<any> => {
+    console.log('save');
+    try {
+      list.forEach((itm: IArticle) => firebaseDB.collection(collectionName).add(itm));
+      return Promise.resolve();
+    } catch {
+      return Promise.reject();
+    }
   },
-  save: (list: any): Promise<any> => {
-    return list.forEach((itm: any) => firebaseDB.collection('list').add(itm));
+  deleteAll: (): Promise<any> => {
+    // return Promise.resolve();
+    try {
+      deleteCollection(firebaseDB, collectionName);
+      return Promise.resolve();
+    } catch {
+      return Promise.reject();
+    }
   }
 };
 
@@ -31,20 +44,17 @@ function deleteCollection(db: any, collectionPath: string) {
   const collectionRef = db.collection(collectionPath);
   const query = collectionRef.orderBy('__name__');
 
-  return new Promise((resolve, reject) => {
-    deleteQueryBatch(db, query, resolve, reject);
-  });
+  deleteQueryBatch(db, query);
 }
 
-function deleteQueryBatch(db: any, query: any, resolve: any, reject: any) {
-  query
+function deleteQueryBatch(db: any, query: any) {
+  return query
     .get()
     .then((snapshot: firestore.QuerySnapshot) => {
       // When there are no documents left, we are done
       if (snapshot.size === 0) {
         return 0;
       }
-
       // Delete documents in a batch
       const batch = db.batch();
       snapshot.docs.forEach(doc => {
@@ -57,15 +67,13 @@ function deleteQueryBatch(db: any, query: any, resolve: any, reject: any) {
     })
     .then((numDeleted: any) => {
       if (numDeleted === 0) {
-        resolve();
         return;
       }
-
       // Recurse on the next process tick, to avoid
       // exploding the stack.
       process.nextTick(() => {
-        deleteQueryBatch(db, query, resolve, reject);
+        deleteQueryBatch(db, query);
       });
     })
-    .catch(reject);
+    .catch((err: any) => new Error(err));
 }
