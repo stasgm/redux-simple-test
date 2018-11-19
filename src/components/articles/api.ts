@@ -6,36 +6,54 @@ import { firestore } from 'firebase/app';
 import { firebaseDB } from '@src/firestore';
 import { IArticle } from '@src/models';
 
-const mapToObject = (res: any) => res;
 const collectionName = 'list';
 
 export const firestoreApi = {
-  load: (): Promise<any> => {
-    return mapToObject(
-      firebaseDB
-        .collection(collectionName)
-        .get()
-        .then((snapshot: firestore.QuerySnapshot) =>
-          snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data())
-        )
-    );
-  },
-  save: (list: IArticle[]): Promise<any> => {
-    console.log('save');
+  load: async (): Promise<any> => {
     try {
-      list.forEach((itm: IArticle) => firebaseDB.collection(collectionName).add(itm));
-      return Promise.resolve();
-    } catch {
-      return Promise.reject();
+      const snapshot = await firebaseDB.collection(collectionName).orderBy('orderNum', 'desc'). get();
+      return snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data());
+    } catch (err) {
+      return Promise.reject(err);
     }
   },
-  deleteAll: (): Promise<any> => {
-    // return Promise.resolve();
+  save: async (list: IArticle[]): Promise<any> => {
     try {
-      deleteCollection(firebaseDB, collectionName);
+      await list.forEach((itm: IArticle) => firebaseDB.collection(collectionName).add(itm));
       return Promise.resolve();
-    } catch {
-      return Promise.reject();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  add: async (record: IArticle): Promise<any> => {
+    try {
+      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).set(record);
+      // return snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data());
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  update: async (record: IArticle): Promise<any> => {
+    try {
+      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).set(record);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  delete: async (record: IArticle): Promise<any> => {
+    try {
+      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).delete();
+      return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  deleteAll: async (): Promise<any> => {
+    try {
+      await deleteCollection(firebaseDB, collectionName);
+      return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
     }
   }
 };
@@ -44,10 +62,10 @@ function deleteCollection(db: any, collectionPath: string) {
   const collectionRef = db.collection(collectionPath);
   const query = collectionRef.orderBy('__name__');
 
-  deleteQueryBatch(db, query);
+  return new Promise((resolve, reject) => deleteQueryBatch(db, query, resolve, reject));
 }
 
-function deleteQueryBatch(db: any, query: any) {
+function deleteQueryBatch(db: any, query: any, resolve: any, reject: any) {
   return query
     .get()
     .then((snapshot: firestore.QuerySnapshot) => {
@@ -67,13 +85,14 @@ function deleteQueryBatch(db: any, query: any) {
     })
     .then((numDeleted: any) => {
       if (numDeleted === 0) {
-        return;
+        resolve()
+        return ;
       }
       // Recurse on the next process tick, to avoid
       // exploding the stack.
       process.nextTick(() => {
-        deleteQueryBatch(db, query);
+        deleteQueryBatch(db, query, resolve, reject);
       });
     })
-    .catch((err: any) => new Error(err));
+    .catch((err: any) => reject(err));
 }

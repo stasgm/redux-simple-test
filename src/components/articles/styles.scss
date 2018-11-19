@@ -67,12 +67,14 @@ $breakpoints: (
 .button-container {
   display: flex;
   justify-content: flex-end;
+
   .button-control {
     width: 100px;
     margin: 0px 4px 0px 0px;
   }
-  .button-user {
+  .button-icon {
     width: 40px;
+    margin: 0px 4px 0px 0px;
   }
   button:first-child {
     margin-left: 4px;

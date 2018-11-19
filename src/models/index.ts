@@ -1,6 +1,9 @@
 export interface IArticle {
   key: string;
   name: string;
+  docid?: string;
+  hasSaved: boolean;
+  orderNum: number;
 }
 
 export interface IArticles {

@@ -22,8 +22,12 @@ interface IProps {
   onEdit: (article: IArticle) => void;
   onDelete: (article: IArticle) => void;
   onDeleteAll: () => void;
-  onLoad: () => void;
-  onSave: (article: IArticle[]) => void;
+  onDbLoad: () => void;
+  onDbSave: (article: IArticle[]) => void;
+  onDbDeleteAll: () => void;
+  onDbAdd: (article: IArticle) => void;
+  onDbDelete: (article: IArticle) => void;
+  onDbUpdate: (article: IArticle) => void;
   articles: IArticle[];
   isLoading: boolean;
   hasErrored: boolean;
@@ -51,6 +55,11 @@ class ArticlesConnected extends React.Component<IProps, IState> {
       recordValue: null
     }
   };
+
+  public componentWillMount() {
+    // fetchData();
+    this.props.onDbLoad();
+  }
 
   private columns = [
     /*   {
@@ -90,7 +99,16 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     } else {
       // message.success('Nice work, good boy!', 0.5);
       if (textInput.current) textInput.current.focus();
-      this.props.onAdd({ name: this.state.inputText, key: shortid() });
+      const record: IArticle = {
+        name: this.state.inputText,
+        key: shortid(),
+        hasSaved: false,
+        orderNum: this.props.articles.length > 0 ? Math.max(...this.props.articles.map(itm => itm.orderNum)) + 1 : 0
+      };
+
+      this.props.onAdd(record);
+      this.props.onDbAdd(record);
+
       this.setState({ inputText: '' });
     }
   };
@@ -103,6 +121,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
         deleteArticle(record);
       }
     });
+    this.props.onDbDelete(record);
   };
 
   private handleClickDeleteAll = (deleteArticles: () => void) => {
@@ -120,12 +139,15 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
     this.setState({ isInputError: false });
 
+    this.props.onDbDeleteAll();
+
     if (textInput.current) textInput.current.focus();
   };
 
   private handleEditModalOk = () => {
     if (this.state.modal.recordValue) {
       this.props.onEdit(this.state.modal.recordValue);
+      this.props.onDbUpdate(this.state.modal.recordValue);
     }
     this.handleEditModalCancel();
   };
@@ -143,11 +165,15 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleGetData = () => {
-    this.props.onLoad();
+    this.props.onDbLoad();
   };
 
   private handleSaveData = () => {
-    this.props.onSave(this.props.articles);
+    this.props.onDbSave(this.props.articles);
+  };
+
+  private handleUser = () => {
+    console.log('click user');
   };
 
   public render() {
@@ -170,11 +196,17 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             />
           </div>
           <div className="button-container">
-            <Button onClick={this.handleAdd} className='button-control'>Добавить</Button>
-            <Button onClick={this.handleDeleteAll} className='button-control'>Удалить всё</Button>
-            <Button onClick={this.handleGetData} className='button-control'>Load</Button>
-            <Button onClick={this.handleSaveData} className='button-control'>Save</Button>
-            <Button onClick={this.handleSaveData} icon="user" className="button-user" />
+            <Button onClick={this.handleAdd} className="button-control">
+              Добавить
+            </Button>
+            <Button onClick={this.handleDeleteAll} className="button-control">
+              Удалить всё
+            </Button>
+            <Button onClick={this.handleGetData} icon="sync" className="button-icon" />
+            {/* <Button onClick={this.handleSaveData} className="button-control">
+              Save
+            </Button> */}
+            <Button onClick={this.handleUser} icon="user" className="button-icon" />
           </div>
         </div>
         <Table
@@ -191,7 +223,9 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             onChange={e =>
               this.handleEditModal({
                 name: e.currentTarget.value,
-                key: this.state.modal.recordValue ? this.state.modal.recordValue.key : ''
+                key: this.state.modal.recordValue ? this.state.modal.recordValue.key : '',
+                orderNum: this.state.modal.recordValue ? this.state.modal.recordValue.orderNum : 0,
+                hasSaved: this.state.modal.recordValue ? this.state.modal.recordValue.hasSaved : false
               })
             }
           />
@@ -214,10 +248,66 @@ export const Articles = connect(
     onEdit: (article: IArticle) => articlesActions.editArticle(article),
     onDelete: (article: IArticle) => articlesActions.deleteArticle(article),
     onDeleteAll: () => articlesActions.deleteArticles(),
-    onLoad: () => fetchData(),
-    onSave: (articles: IArticle[]) => saveData(articles)
+    onDbAdd: (article: IArticle) => addData(article),
+    onDbDelete: (article: IArticle) => deleteData(article),
+    onDbDeleteAll: () => deleteAllData(),
+    onDbUpdate: (article: IArticle) => updateData(article),
+    onDbLoad: () => fetchData(),
+    onDbSave: (articles: IArticle[]) => saveData(articles)
   }
 )(ArticlesConnected);
+
+const addData = (record: IArticle) => {
+  return async (dispatch: Dispatch) => {
+    // dispatch(articlesActions.saveArticles.request());
+    try {
+      await firestoreApi.add(record);
+      // dispatch(articlesActions.saveArticles.success());
+    } catch (err) {
+      // dispatch(articlesActions.saveArticles.failure(err));
+      // dispatch(message.error('Ошибка сохранения данных'));
+    }
+  };
+};
+
+const deleteData = (record: IArticle) => {
+  return async (dispatch: Dispatch) => {
+    // dispatch(articlesActions.saveArticles.request());
+    try {
+      await firestoreApi.delete(record);
+      // dispatch(articlesActions.saveArticles.success());
+    } catch (err) {
+      // dispatch(articlesActions.saveArticles.failure(err));
+      // dispatch(message.error('Ошибка сохранения данных'));
+    }
+  };
+};
+
+const updateData = (record: IArticle) => {
+  return async (dispatch: Dispatch) => {
+    // dispatch(articlesActions.saveArticles.request());
+    try {
+      await firestoreApi.update(record);
+      // dispatch(articlesActions.saveArticles.success());
+    } catch (err) {
+      // dispatch(articlesActions.saveArticles.failure(err));
+      // dispatch(message.error('Ошибка сохранения данных'));
+    }
+  };
+};
+
+const deleteAllData = () => {
+  return async (dispatch: Dispatch) => {
+    // dispatch(articlesActions.saveArticles.request());
+    try {
+      await firestoreApi.deleteAll();
+      // dispatch(articlesActions.saveArticles.success());
+    } catch (err) {
+      // dispatch(articlesActions.saveArticles.failure(err));
+      // dispatch(message.error('Ошибка сохранения данных'));
+    }
+  };
+};
 
 const fetchData = () => {
   return async (dispatch: Dispatch) => {
