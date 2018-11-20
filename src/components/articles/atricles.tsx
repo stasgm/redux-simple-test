@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import shortid from 'shortid';
-import { Button, Table, Input, Modal, message } from 'antd';
+import { Button, Table, Input, Modal, message, Icon } from 'antd';
 
 import { articlesActions } from '@src/redux/actions/articlesActions';
 import { IRootState, IArticle } from '@src/models';
@@ -93,21 +93,19 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   private handleAdd = () => {
     if (this.state.inputText.length === 0) {
-      // message.error(`Don't try to hack the system!`, 0.5);
       if (textInput.current) textInput.current.focus();
       this.setState({ isInputError: true });
     } else {
-      // message.success('Nice work, good boy!', 0.5);
       if (textInput.current) textInput.current.focus();
       const record: IArticle = {
         name: this.state.inputText,
         key: shortid(),
         hasSaved: false,
-        orderNum: this.props.articles.length > 0 ? Math.max(...this.props.articles.map(itm => itm.orderNum)) + 1 : 0
+        orderNum: this.props.articles.length > 0 ? Math.max(...this.props.articles.map(itm => itm.orderNum)) + 1 : 0 // другой способ последнего номера элемента
       };
 
-      this.props.onAdd(record);
-      this.props.onDbAdd(record);
+      this.props.onAdd(record); // state action
+      this.props.onDbAdd(record); // db action sync
 
       this.setState({ inputText: '' });
     }
@@ -196,16 +194,15 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             />
           </div>
           <div className="button-container">
-            <Button onClick={this.handleAdd} className="button-control">
+            <Button onClick={this.handleAdd} className="button-control" icon="plus">
               Добавить
             </Button>
-            <Button onClick={this.handleDeleteAll} className="button-control">
+            <Button onClick={this.handleDeleteAll} className="button-control" icon="delete">
               Удалить всё
             </Button>
-            <Button onClick={this.handleGetData} icon="sync" className="button-icon" />
-            {/* <Button onClick={this.handleSaveData} className="button-control">
-              Save
-            </Button> */}
+            <Button onClick={this.handleGetData} className="button-icon">
+              <Icon type="sync" spin={this.props.isLoading}/>
+            </Button>
             <Button onClick={this.handleUser} icon="user" className="button-icon" />
           </div>
         </div>
