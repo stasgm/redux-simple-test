@@ -1,5 +1,5 @@
 $breakpoints: (
-  xxs: 321px,
+  xxs: 400px,
   xs: 586px,
   sm: 768px,
   md: 884px,
@@ -33,7 +33,7 @@ $breakpoints: (
     max-width: 100%;
   }
   @include respond-below(md) {
-    margin: auto 4px;
+    margin: auto 6px;
   }
 }
 
@@ -45,14 +45,12 @@ $breakpoints: (
   flex-wrap: nowrap;
   @include respond-below(xs) {
     min-width: 300px;
-  }
-  @include respond-below(xs) {
     flex-wrap: wrap;
+    overflow: hidden;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 10px; /* Position the navbar at the top of the page */
+    // width: 100%; /* Full width */
   }
-}
-
-.table {
-  margin-top: 3px;
 }
 
 .input-container .input-box-container {
@@ -69,11 +67,11 @@ $breakpoints: (
   justify-content: flex-end;
 
   .button-control {
-    width: 100px;
+    width: 120px;
     margin: 0px 4px 0px 0px;
   }
   .button-icon {
-    width: 40px;
+    width: 50px;
     margin: 0px 4px 0px 0px;
   }
   button:first-child {
@@ -81,6 +79,9 @@ $breakpoints: (
   }
   button:last-child {
     margin-right: 0px;
+  }
+  @include respond-below(xxs) {
+    justify-content: space-between;
   }
   @include respond-below(xs) {
     margin-top: 3px;
@@ -94,5 +95,12 @@ $breakpoints: (
     button:last-child {
       margin-right: 0px;
     }
+  }
+}
+
+.table {
+  margin-top: 3px;
+  @include respond-below(xs) {
+    margin-top: 60px;
   }
 }
