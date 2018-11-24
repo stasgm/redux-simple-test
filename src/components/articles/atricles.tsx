@@ -63,7 +63,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   }
 
   private listenerHandler = (data: any) => {
-    console.log(data.docChanges());
+    // console.log(data.docChanges());
     this.props.onDbLoad();
   };
 
@@ -172,10 +172,10 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     this.props.onDbLoad();
   };
 
-  private handleSaveData = () => {
+  /* private handleSaveData = () => {
     this.props.onDbSave(this.props.articles);
   };
-
+ */
   private handleUser = () => {
     console.log('click user');
   };
