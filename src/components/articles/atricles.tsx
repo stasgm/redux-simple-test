@@ -176,58 +176,63 @@ class ArticlesConnected extends React.Component<IProps, IState> {
 
   public render() {
     return (
-      <div className="content-container">
-        <div className="input-container">
-          <div className="input-box-container">
-            <Input
-              style={{ borderColor: this.state.isInputError ? 'red' : '' }}
-              onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
-              value={this.state.inputText}
-              placeholder="Enter something good"
-              ref={textInput}
-              autoFocus={true}
-              onKeyUp={event => {
-                if (event.key === 'Enter') {
-                  this.handleAdd();
-                }
-              }}
-            />
-          </div>
-          <div className="button-container">
-            <Button onClick={this.handleAdd} className="button-control" icon="plus">
-              Добавить
-            </Button>
-            <Button onClick={this.handleDeleteAll} className="button-control" icon="delete">
-              Удалить всё
-            </Button>
-            <Button onClick={this.handleGetData} className="button-icon">
-              <Icon type="sync" spin={this.props.isLoading}/>
-            </Button>
-            <Button onClick={this.handleUser} icon="user" className="button-icon" />
+      <>
+        <div className="header">
+          <div className="page-title">Simple react-redux-typescript CRUD example</div>
+          <div className="input-container">
+            <div className="input-box-container">
+              <Input
+                style={{ borderColor: this.state.isInputError ? 'red' : '' }}
+                onChange={e => this.setState({ inputText: e.target.value, isInputError: false })}
+                value={this.state.inputText}
+                placeholder="Enter something good"
+                ref={textInput}
+                autoFocus={true}
+                onKeyUp={event => {
+                  if (event.key === 'Enter') {
+                    this.handleAdd();
+                  }
+                }}
+              />
+            </div>
+            <div className="button-container">
+              <Button onClick={this.handleAdd} className="button-control" icon="plus">
+                Добавить
+              </Button>
+              <Button onClick={this.handleDeleteAll} className="button-control" icon="delete">
+                Удалить всё
+              </Button>
+              <Button onClick={this.handleGetData} className="button-icon">
+                <Icon type="sync" spin={this.props.isLoading} />
+              </Button>
+              <Button onClick={this.handleUser} icon="user" className="button-icon" />
+            </div>
           </div>
         </div>
-        <Table
-          className="table"
-          columns={this.columns}
-          size="small"
-          bordered={true}
-          dataSource={this.props.articles}
-          loading={this.props.isLoading}
-        />
-        <ModalEdit {...this.state.modal} onOk={() => this.handleEditModalOk()} onCancel={this.handleEditModalCancel}>
-          <Input
-            value={this.state.modal.recordValue ? this.state.modal.recordValue.name : ''}
-            onChange={e =>
-              this.handleEditModal({
-                name: e.currentTarget.value,
-                key: this.state.modal.recordValue ? this.state.modal.recordValue.key : '',
-                orderNum: this.state.modal.recordValue ? this.state.modal.recordValue.orderNum : 0,
-                hasSaved: this.state.modal.recordValue ? this.state.modal.recordValue.hasSaved : false
-              })
-            }
+        <div className="content-container">
+          <Table
+            className="table"
+            columns={this.columns}
+            size="small"
+            bordered={true}
+            dataSource={this.props.articles}
+            loading={this.props.isLoading}
           />
-        </ModalEdit>
-      </div>
+          <ModalEdit {...this.state.modal} onOk={() => this.handleEditModalOk()} onCancel={this.handleEditModalCancel}>
+            <Input
+              value={this.state.modal.recordValue ? this.state.modal.recordValue.name : ''}
+              onChange={e =>
+                this.handleEditModal({
+                  name: e.currentTarget.value,
+                  key: this.state.modal.recordValue ? this.state.modal.recordValue.key : '',
+                  orderNum: this.state.modal.recordValue ? this.state.modal.recordValue.orderNum : 0,
+                  hasSaved: this.state.modal.recordValue ? this.state.modal.recordValue.hasSaved : false
+                })
+              }
+            />
+          </ModalEdit>
+        </div>
+      </>
     );
   }
 }

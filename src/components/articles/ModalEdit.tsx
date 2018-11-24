@@ -7,11 +7,12 @@ interface IProps {
   visible: boolean;
   recordValue: IArticle | null;
   modalText: string;
+  children?: React.ReactNode;
   onOk: () => void;
   onCancel: () => void;
 }
 
-export const ModalEdit = (props: IProps, children: ReactChildren) => {
+export const ModalEdit = (props: IProps) => {
     return (
       <div>
         <Modal
@@ -21,7 +22,7 @@ export const ModalEdit = (props: IProps, children: ReactChildren) => {
           onCancel={props.onCancel}
         >
           <p>{props.modalText}</p>
-          {children}
+          {props.children}
         </Modal>
       </div>
     );

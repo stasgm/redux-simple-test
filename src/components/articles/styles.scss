@@ -26,7 +26,7 @@ $breakpoints: (
 
 .main-container {
   max-width: 876px;
-  min-width: 580px;
+  min-width: 574px;
   margin: auto;
   @include respond-below(xs) {
     min-width: 300px;
@@ -37,19 +37,35 @@ $breakpoints: (
   }
 }
 
+
+.header {
+  @include respond-below(xs) {
+    min-width: 300px;
+    // width: calc(100% - 12px);
+    overflow: hidden;
+    position: sticky;
+    // position: fixed; /* Set the navbar to fixed position */
+    top: 0px; /* Position the navbar at the top of the page */
+    background: white;
+    opacity: 0.9;
+    z-index: 500;
+  }
+}
+
 .input-container {
   display: flex;
   justify-content: space-between;
-  min-width: 576px;
+  min-width: 574px;
   max-width: 1600px;
   flex-wrap: nowrap;
   @include respond-below(xs) {
     min-width: 300px;
+    width: calc(100% - 12px);
     flex-wrap: wrap;
     overflow: hidden;
-    position: fixed; /* Set the navbar to fixed position */
-    top: 10px; /* Position the navbar at the top of the page */
-    // width: 100%; /* Full width */
+    // position: fixed; /* Set the navbar to fixed position */
+    // top: 6px; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
   }
 }
 
@@ -101,6 +117,6 @@ $breakpoints: (
 .table {
   margin-top: 3px;
   @include respond-below(xs) {
-    margin-top: 60px;
+    // margin-top: 90px;
   }
 }
