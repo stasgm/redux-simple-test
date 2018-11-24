@@ -6,7 +6,7 @@ const initialState: IArticles = {
   list: [],
   filter: '',
   isLoading: false,
-  hasErrored: false,
+  hasErrored: false
 };
 
 export const articlesReducer = (state: IArticles = initialState, action: TActions): IArticles => {
@@ -53,7 +53,7 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
       return {
         ...state,
         list: action.payload,
-        isLoading: false,
+        isLoading: false
       };
     }
     case getType(articlesActions.saveArticles.request): {
@@ -72,7 +72,7 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
     case getType(articlesActions.saveArticles.success): {
       return {
         ...state,
-        isLoading: false,
+        isLoading: false
       };
     }
     default:

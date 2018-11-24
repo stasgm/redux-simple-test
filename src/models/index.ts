@@ -21,4 +21,3 @@ export interface IBaseAction<T> {
 export interface IRootState {
   articles: IArticles;
 }
-

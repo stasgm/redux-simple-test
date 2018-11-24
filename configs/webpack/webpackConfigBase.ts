@@ -35,7 +35,7 @@ function getWebpackConfigBase(outputFilename: string, outputChunkFilename: strin
     ],
     resolve: {
       alias: aliasPath,
-/*       alias: {
+      /*       alias: {
         app: getRootRelativePath('src/'),
         '@common': getRootRelativePath('src/common'),
         '@components': getRootRelativePath('src/components'),

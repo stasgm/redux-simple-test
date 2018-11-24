@@ -11,6 +11,7 @@ const store = configureStore({});
 
 ReactDOM.render(
   <Provider store={store}>
-      <App />
-  </Provider>, document.getElementById(config.webpack.appMountNodeId) as HTMLElement,
+    <App />
+  </Provider>,
+  document.getElementById(config.webpack.appMountNodeId) as HTMLElement
 );

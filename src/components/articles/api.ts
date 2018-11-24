@@ -11,7 +11,10 @@ const collectionName = 'list';
 export const firestoreApi = {
   load: async (): Promise<any> => {
     try {
-      const snapshot = await firebaseDB.collection(collectionName).orderBy('orderNum', 'desc'). get();
+      const snapshot = await firebaseDB
+        .collection(collectionName)
+        .orderBy('orderNum', 'desc')
+        .get();
       return snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data());
     } catch (err) {
       return Promise.reject(err);
@@ -27,7 +30,10 @@ export const firestoreApi = {
   },
   add: async (record: IArticle): Promise<any> => {
     try {
-      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).set(record);
+      const snapshot = await firebaseDB
+        .collection(collectionName)
+        .doc(record.key)
+        .set(record);
       // return snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data());
     } catch (err) {
       return Promise.reject(err);
@@ -35,14 +41,20 @@ export const firestoreApi = {
   },
   update: async (record: IArticle): Promise<any> => {
     try {
-      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).set(record);
+      const snapshot = await firebaseDB
+        .collection(collectionName)
+        .doc(record.key)
+        .set(record);
     } catch (err) {
       return Promise.reject(err);
     }
   },
   delete: async (record: IArticle): Promise<any> => {
     try {
-      const snapshot = await firebaseDB.collection(collectionName).doc(record.key).delete();
+      const snapshot = await firebaseDB
+        .collection(collectionName)
+        .doc(record.key)
+        .delete();
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
@@ -85,8 +97,8 @@ function deleteQueryBatch(db: any, query: any, resolve: any, reject: any) {
     })
     .then((numDeleted: any) => {
       if (numDeleted === 0) {
-        resolve()
-        return ;
+        resolve();
+        return;
       }
       // Recurse on the next process tick, to avoid
       // exploding the stack.

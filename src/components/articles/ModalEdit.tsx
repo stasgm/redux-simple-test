@@ -1,7 +1,7 @@
 import React, { ReactChildren } from 'react';
 import { Modal, Input } from 'antd';
 
-import { IArticle } from '@src/models'
+import { IArticle } from '@src/models';
 
 interface IProps {
   visible: boolean;
@@ -13,18 +13,12 @@ interface IProps {
 }
 
 export const ModalEdit = (props: IProps) => {
-    return (
-      <div>
-        <Modal
-          title="Edit dialog"
-          visible={props.visible}
-          onOk={props.onOk}
-          onCancel={props.onCancel}
-        >
-          <p>{props.modalText}</p>
-          {props.children}
-        </Modal>
-      </div>
-    );
-
-}
+  return (
+    <div>
+      <Modal title="Edit dialog" visible={props.visible} onOk={props.onOk} onCancel={props.onCancel}>
+        <p>{props.modalText}</p>
+        {props.children}
+      </Modal>
+    </div>
+  );
+};

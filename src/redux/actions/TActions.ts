@@ -1,4 +1,3 @@
-import { TArticlesActions } from "./articlesActions";
+import { TArticlesActions } from './articlesActions';
 
-export type TActions =
-  | TArticlesActions;
+export type TActions = TArticlesActions;

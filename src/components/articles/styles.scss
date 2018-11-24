@@ -138,6 +138,6 @@ $breakpoints: (
 
 .ant-table-body, .ant-table-header {
   @include respond-below(xs) {
-    margin: 0;
+    margin: 0!important;
   }
 }

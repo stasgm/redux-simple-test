@@ -34,6 +34,8 @@
     "build",
     "dist",
     "node_modules",
-    "scripts"
+    "scripts",
+    "package.json",
+    "*.json"
   ]
 }
