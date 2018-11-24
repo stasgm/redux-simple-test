@@ -86,7 +86,7 @@
 
 @media (max-width: 585px) {
   .ant-table-body, .ant-table-header {
-    margin: 0; } }
+    margin: 0 !important; } }
 
 .main-container {
   color: black; }
