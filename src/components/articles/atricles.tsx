@@ -217,6 +217,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
             bordered={true}
             dataSource={this.props.articles}
             loading={this.props.isLoading}
+            useFixedHeader={true}
           />
           <ModalEdit {...this.state.modal} onOk={() => this.handleEditModalOk()} onCancel={this.handleEditModalCancel}>
             <Input

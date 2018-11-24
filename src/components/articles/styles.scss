@@ -1,4 +1,5 @@
 $breakpoints: (
+  xxxs: 340px,
   xxs: 400px,
   xs: 586px,
   sm: 768px,
@@ -39,9 +40,9 @@ $breakpoints: (
 
 
 .header {
+  margin-bottom: 3px;
   @include respond-below(xs) {
     min-width: 300px;
-    // width: calc(100% - 12px);
     overflow: hidden;
     position: sticky;
     // position: fixed; /* Set the navbar to fixed position */
@@ -96,15 +97,12 @@ $breakpoints: (
   button:last-child {
     margin-right: 0px;
   }
-  @include respond-below(xxs) {
-    justify-content: space-between;
-  }
   @include respond-below(xs) {
     margin-top: 3px;
     width: 100%;
-    button {
+/*     button {
       width: 100px;
-    }
+    } */
     button:first-child {
       margin-left: 0px;
     }
@@ -112,11 +110,34 @@ $breakpoints: (
       margin-right: 0px;
     }
   }
+  @include respond-below(xxs) {
+    justify-content: space-between;
+  }
+  @include respond-below(xxxs) {
+    .button-control {
+      margin: 0px 2px 0px 0px;
+      width: 110px;
+      // font-size: 13px;
+      padding: 0px;
+    }
+    .button-icon {
+      width: 40px;
+      // font-size: 12px;
+      margin: 0px 2px 0px 0px;
+      padding: 0px;
+    }
+  }
 }
 
 .table {
-  margin-top: 3px;
+  // margin-top: 3px;
   @include respond-below(xs) {
     // margin-top: 90px;
+  }
+}
+
+.ant-table-body, .ant-table-header {
+  @include respond-below(xs) {
+    margin: 0;
   }
 }
