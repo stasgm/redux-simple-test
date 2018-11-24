@@ -7,7 +7,7 @@ import { Button, Table, Input, Modal, message, Icon } from 'antd';
 import { articlesActions } from '@src/redux/actions/articlesActions';
 import { IRootState, IArticle } from '@src/models';
 import { ModalEdit } from './ModalEdit';
-import { firestoreApi } from './api';
+import { firestoreApi, listener } from './api';
 
 import './styles.scss';
 
@@ -56,10 +56,16 @@ class ArticlesConnected extends React.Component<IProps, IState> {
     }
   };
 
-  public componentWillMount() {
-    // fetchData();
+  public componentDidMount() {
+    // fetchData();    ;
+    listener(this.listenerHandler);
     this.props.onDbLoad();
   }
+
+  private listenerHandler = (data: any) => {
+    console.log(data.docChanges());
+    this.props.onDbLoad();
+  };
 
   private columns = [
     /*   {
@@ -338,3 +344,9 @@ const saveData = (list: IArticle[]) => {
     }
   };
 };
+
+/*
+  TODO
+    1. перенести в редьюсер key: shortid(),
+    2. numberOrder перенести в редьюсер
+*/

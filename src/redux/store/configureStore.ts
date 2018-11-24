@@ -4,9 +4,7 @@ import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { rootReducer } from '../reducers/';
 
-const middleware = [thunk, logger];
-
-// if (process.env.NODE_ENV || 'production' === 'production') middleware = [thunk];
+const middleware = (process.env.NODE_ENV || 'production' === 'production') ? [thunk] : [thunk, logger];
 
 export const configureStore = (initialState: {}) => {
   const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));

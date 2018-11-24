@@ -8,6 +8,13 @@ import { IArticle } from '@src/models';
 
 const collectionName = 'list';
 
+export const listener = async (listenerHandler: any): Promise<any>  => {
+  return firebaseDB.collection(collectionName).onSnapshot((docSnapshot: firestore.QuerySnapshot) => {
+    return listenerHandler(docSnapshot);
+    // console.log('listener:', docSnapshot);
+  })
+};
+
 export const firestoreApi = {
   load: async (): Promise<any> => {
     try {
