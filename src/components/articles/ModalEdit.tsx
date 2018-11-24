@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactChildren } from 'react';
 import { Modal, Input } from 'antd';
 
 import { IArticle } from '@src/models'
@@ -11,7 +11,7 @@ interface IProps {
   onCancel: () => void;
 }
 
-export const ModalEdit: React.SFC<IProps> = props => {
+export const ModalEdit = (props: IProps, children: ReactChildren) => {
     return (
       <div>
         <Modal
@@ -21,7 +21,7 @@ export const ModalEdit: React.SFC<IProps> = props => {
           onCancel={props.onCancel}
         >
           <p>{props.modalText}</p>
-          {props.children}
+          {children}
         </Modal>
       </div>
     );
