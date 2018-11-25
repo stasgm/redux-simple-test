@@ -57,13 +57,17 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   public componentDidMount() {
-    // fetchData();    ;
     listener(this.listenerHandler);
-    this.props.onDbLoad();
+    // this.props.onDbLoad();
+  }
+
+  public componentDidUpdate(prevProps: IProps) {
+    if ((this.props.hasErrored !== prevProps.hasErrored) && this.props.hasErrored ) {
+      message.error('Что-то пошло не так');
+    };
   }
 
   private listenerHandler = (data: any) => {
-    // console.log(data.docChanges());
     this.props.onDbLoad();
   };
 
@@ -89,7 +93,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
           >
             <Button.Group>
               <Button icon="edit" onClick={() => this.handleEdit(record)} />
-              <Button icon="delete" onClick={() => this.handleClickDelete(this.props.onDelete, record)} />
+              <Button icon="delete" onClick={() => this.handleClickDelete(this.handleDeleteRecord, record)} />
             </Button.Group>
           </div>
         </div>
@@ -110,12 +114,17 @@ class ArticlesConnected extends React.Component<IProps, IState> {
         orderNum: this.props.articles.length > 0 ? Math.max(...this.props.articles.map(itm => itm.orderNum)) + 1 : 0 // другой способ последнего номера элемента
       };
 
-      this.props.onAdd(record); // state action
+      // this.props.onAdd(record); // state action
       this.props.onDbAdd(record); // db action sync
 
       this.setState({ inputText: '' });
     }
   };
+
+  private handleDeleteRecord = (record: IArticle) => {
+    // this.props.onDelete(record)
+    this.props.onDbDelete(record);
+  }
 
   private handleClickDelete = (deleteArticle: (record: IArticle) => void, record: IArticle) => {
     Modal.confirm({
@@ -125,7 +134,6 @@ class ArticlesConnected extends React.Component<IProps, IState> {
         deleteArticle(record);
       }
     });
-    this.props.onDbDelete(record);
   };
 
   private handleClickDeleteAll = (deleteArticles: () => void) => {
@@ -139,7 +147,7 @@ class ArticlesConnected extends React.Component<IProps, IState> {
   };
 
   private handleDeleteAll = () => {
-    this.handleClickDeleteAll(this.props.onDeleteAll);
+    // this.handleClickDeleteAll(this.props.onDeleteAll);
 
     this.setState({ isInputError: false });
 
@@ -268,39 +276,36 @@ export const Articles = connect(
 
 const addData = (record: IArticle) => {
   return async (dispatch: Dispatch) => {
-    // dispatch(articlesActions.saveArticles.request());
+    dispatch(articlesActions.addDBArticle.request());
     try {
       await firestoreApi.add(record);
-      // dispatch(articlesActions.saveArticles.success());
+      dispatch(articlesActions.addDBArticle.success(record));
     } catch (err) {
-      // dispatch(articlesActions.saveArticles.failure(err));
-      // dispatch(message.error('Ошибка сохранения данных'));
+      dispatch(articlesActions.addDBArticle.failure(err));
     }
   };
 };
 
 const deleteData = (record: IArticle) => {
   return async (dispatch: Dispatch) => {
-    // dispatch(articlesActions.saveArticles.request());
+    dispatch(articlesActions.deleteDBArticle.request());
     try {
       await firestoreApi.delete(record);
-      // dispatch(articlesActions.saveArticles.success());
+      dispatch(articlesActions.deleteDBArticle.success(record));
     } catch (err) {
-      // dispatch(articlesActions.saveArticles.failure(err));
-      // dispatch(message.error('Ошибка сохранения данных'));
+      dispatch(articlesActions.deleteDBArticle.failure(err));
     }
   };
 };
 
 const updateData = (record: IArticle) => {
   return async (dispatch: Dispatch) => {
-    // dispatch(articlesActions.saveArticles.request());
+    dispatch(articlesActions.updateDBArticle.request());
     try {
       await firestoreApi.update(record);
-      // dispatch(articlesActions.saveArticles.success());
+      dispatch(articlesActions.updateDBArticle.success(record));
     } catch (err) {
-      // dispatch(articlesActions.saveArticles.failure(err));
-      // dispatch(message.error('Ошибка сохранения данных'));
+      dispatch(articlesActions.updateDBArticle.failure(err));
     }
   };
 };

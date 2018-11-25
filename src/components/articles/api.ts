@@ -8,11 +8,15 @@ import { IArticle } from '@src/models';
 
 const collectionName = 'list';
 
-export const listener = async (listenerHandler: any): Promise<any>  => {
-  return firebaseDB.collection(collectionName).onSnapshot((docSnapshot: firestore.QuerySnapshot) => {
-    return listenerHandler(docSnapshot);
-    // console.log('listener:', docSnapshot);
-  })
+export const listener = async (listenerHandler: any): Promise<any> => {
+  try {
+    const snapshot = await firebaseDB
+      .collection(collectionName)
+      .onSnapshot((docSnapshot: firestore.QuerySnapshot) => listenerHandler(docSnapshot));
+    return snapshot;
+  } catch (err) {
+    return Promise.reject(err);
+  }
 };
 
 export const firestoreApi = {
@@ -41,7 +45,6 @@ export const firestoreApi = {
         .collection(collectionName)
         .doc(record.key)
         .set(record);
-      // return snapshot.docs.map((docSnapshot: firestore.QueryDocumentSnapshot) => docSnapshot.data());
     } catch (err) {
       return Promise.reject(err);
     }
@@ -51,7 +54,7 @@ export const firestoreApi = {
       const snapshot = await firebaseDB
         .collection(collectionName)
         .doc(record.key)
-        .set(record);
+        .update(record);
     } catch (err) {
       return Promise.reject(err);
     }

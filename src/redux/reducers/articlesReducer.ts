@@ -41,14 +41,6 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
         isLoading: true
       };
     }
-    case getType(articlesActions.loadArticles.failure): {
-      return {
-        ...state,
-        list: [],
-        isLoading: false,
-        hasErrored: true
-      };
-    }
     case getType(articlesActions.loadArticles.success): {
       return {
         ...state,
@@ -62,17 +54,21 @@ export const articlesReducer = (state: IArticles = initialState, action: TAction
         isLoading: true
       };
     }
-    case getType(articlesActions.saveArticles.failure): {
-      return {
-        ...state,
-        isLoading: false,
-        hasErrored: true
-      };
-    }
     case getType(articlesActions.saveArticles.success): {
       return {
         ...state,
         isLoading: false
+      };
+    }
+    case getType(articlesActions.saveArticles.failure):
+    case getType(articlesActions.loadArticles.failure):
+    case getType(articlesActions.addDBArticle.failure):
+    case getType(articlesActions.updateDBArticle.failure):
+    case getType(articlesActions.deleteDBArticle.failure): {
+      return {
+        ...state,
+        isLoading: false,
+        hasErrored: true
       };
     }
     default:

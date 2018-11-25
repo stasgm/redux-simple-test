@@ -23,6 +23,21 @@ export const articlesActions = {
     void,
     void,
     Error
+  >(),
+  addDBArticle: createAsyncAction('REQUEST_ADD_ARTICLE', 'REQUEST_ADD_SUCCEEDED', 'REQUEST_ADD_FAILED')<
+    void,
+    IArticle,
+    Error
+  >(),
+  updateDBArticle: createAsyncAction('REQUEST_UPDATE_ARTICLE', 'REQUEST_UPDATE_SUCCEEDED', 'REQUEST_UPDATE_FAILED')<
+    void,
+    IArticle,
+    Error
+  >(),
+  deleteDBArticle: createAsyncAction('REQUEST_DELETE_ARTICLE', 'REQUEST_DELETE_SUCCEEDED', 'REQUEST_DELETE_FAILED')<
+    void,
+    IArticle,
+    Error
   >()
 };
 
