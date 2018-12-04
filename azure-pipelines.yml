@@ -13,6 +13,6 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    yarn install -g webpack webpack-cli --save-dev
-    yarn webpack --config webpack.config.js
-  displayName: 'yarn install, run webpack'
+    yarn global add webpack webpack-cli --dev
+    yarn start
+  displayName: 'yarn add, run webpack'
